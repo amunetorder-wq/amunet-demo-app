@@ -47,19 +47,44 @@ with tab2:
     """)
     st.info("💡 **直感的な操作性**: スマホやタブレットから、誰でもゲーム感覚で楽しく操作できます。\n\n💡 **ブランド価値の向上**: 「面白いシステムを入れているお店」として、SNSでの口コミやリピート率向上に貢献します。")
     st.markdown('**【簡易動作デモ】**')
+    
+    # ▼ここから画像を連動させる処理（状態管理）▼
+    if "scene" not in st.session_state:
+        st.session_state.scene = 0
+        
+    scenes = [
+        {"img": "1_desert.jpg", "text": "のどが かわいて たおれそうだ..."},
+        {"img": "2_guild.jpg", "text": "オアシス（ギルド）に たどりついた！"},
+        {"img": "3_tequila.jpg", "text": "テキーラを ちゅうもんした！ テンションUP！"},
+        {"img": "4_hungry.jpg", "text": "おなかが すいてきた... なにか たべよう。"},
+        {"img": "5_karaoke.jpg", "text": "カラオケで ねっしょうした！"},
+        {"img": "6_champagne.jpg", "text": "シャンパンタワー だ！ パーティの はじまりだ！"},
+        {"img": "7_clock.jpg", "text": "あっというまに じかんが すぎていく..."},
+        {"img": "8_glass.jpg", "text": "グラスを かたむけ、よるが ふけていく..."},
+        {"img": "end_good.jpg", "text": "シンデレラ作戦、だいせいこう！"}
+    ]
+
     st.write("▶ コマンドをせんたくしてください")
     cmd_col1, cmd_col2 = st.columns(2)
+    
     with cmd_col1:
-        if st.button("⚔️ たたかう", use_container_width=True):
-            st.error("しかし なにも おこらなかった！")
-        if st.button("🛡️ ぼうぎょ", use_container_width=True):
-            st.warning("ぼうぎょの かまえ！")
+        # 押すたびに次のシーンへ進むボタン
+        if st.button("⚔️ すすむ（アクション）", use_container_width=True):
+            if st.session_state.scene < len(scenes) - 1:
+                st.session_state.scene += 1
+            else:
+                st.balloons() # 最後まで行ったら風船を飛ばす
+                
     with cmd_col2:
-        if st.button("🔮 じゅもん", use_container_width=True):
-            st.balloons()
-            st.success("まほうが かかった！")
-        if st.button("🏃 にげる", use_container_width=True):
-            st.info("うまく にげきれた！")
+        # 最初のシーンに戻るボタン
+        if st.button("🏃 にげる（最初から）", use_container_width=True):
+            st.session_state.scene = 0
+            
+    # 現在のシーンの画像とテキストを表示
+    current = scenes[st.session_state.scene]
+    st.image(current["img"], use_container_width=True)
+    st.write(f"**{current['text']}**")
+    # ▲ここまで▲
 
 # --- 3. 業務自動化デモ ---
 with tab3:
